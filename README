@@ -159,16 +159,18 @@ For a second example, here's an approach to supporting floats:
 
 
 The postscript file "type-hierarchy.ps" shows the binary types
-hierarchy.  It is generated using psgraph from the CMU lisp
+hierarchy.  It is generated using psgraph from Quicklisp
 repository:
 
-  (with-open-file (*standard-output* "type-hierarchy.ps"
-                   :direction :output
-                   :if-exists :supersede)
-    (psgraph:psgraph 'binary-type
-	             #'(lambda (p)
-	                 (mapcar #'class-name
-				 (aclmop:class-direct-subclasses
-                                   (find-class p))))
-                     #'(lambda (s) (list (symbol-name s)))
-	             t))
+    (ql:quickload "psgraph")
+    (ql:quickload "closer-mop")
+    (with-open-file (*standard-output* "type-hierarchy.ps"
+                       :direction :output
+                       :if-exists :supersede)
+        (psgraph:psgraph *standard-output* 'binary-types::binary-type
+    	             #'(lambda (p)
+    	                 (mapcar #'class-name
+     				 (closer-mop:class-direct-subclasses
+                                       (find-class p))))
+                         #'(lambda (s) (list (symbol-name s)))
+	                 t))
